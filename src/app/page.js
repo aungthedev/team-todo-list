@@ -1,95 +1,135 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+
+import { useState, useEffect } from "react";
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.js</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [todoList, setTodoList] = useState([]);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [currentTodo, setCurrentTodo] = useState(null);
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  // 🔁 Load todos from backend on mount
+  useEffect(() => {
+    fetchTodos();
+  }, []);
+
+  const fetchTodos = async () => {
+    const res = await fetch("/api/todos");
+    const data = await res.json();
+    setTodoList(data);
+  };
+
+  const addTodo = async () => {
+    if (title !== "" || description !== "") {
+      const res = await fetch("/api/todos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, description }),
+      });
+      const newTodo = await res.json();
+      setTodoList((prev) => [...prev, newTodo]);
+      setTitle("");
+      setDescription("");
+    }
+  };
+
+  const clearAllTodos = async () => {
+    await fetch("/api/todos", { method: "DELETE" });
+    setTodoList([]);
+  };
+
+  // NEW: Delete todo function
+  const deleteTodo = async (id) => {
+    await fetch(`/api/todos/${id}`, { method: "DELETE" });
+    setTodoList(todoList.filter((todo) => todo.id !== id));
+  };
+
+  return (
+    <div className="flex flex-col h-screen w-screen justify-center items-center p-4">
+      <div className="flex flex-col border rounded-md w-full max-w-3xl p-4 space-y-4">
+        {/* Form */}
+        <div className="flex flex-row space-x-2 w-full justify-between">
+          <input
+            type="text"
+            placeholder="Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="border rounded-md p-2 text-sm w-1/4"
+          />
+          <input
+            type="text"
+            placeholder="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="border rounded-md p-2 text-sm w-1/2"
+          />
+          <button
+            className="rounded-md border p-2 bg-blue-600 text-white text-sm w-1/4 active:bg-blue-700"
+            onClick={(e) => {
+              e.preventDefault();
+              currentTodo ? alert("Update not implemented") : addTodo();
+            }}
           >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+            {currentTodo ? "Update" : "Add"} Todo!
+          </button>
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+
+        {/* Table */}
+        <div className="overflow-x-auto border rounded-md">
+          <table className="w-full text-sm text-left text-gray-700">
+            <thead className="text-xs uppercase bg-gray-100">
+              <tr>
+                <th className="py-3 px-6">Title</th>
+                <th className="py-3 px-6">Description</th>
+                <th className="py-3 px-6">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {todoList.map((todo, index) => (
+                <tr key={index} className="bg-white border-b">
+                  <td className="py-3 px-6">{todo.title}</td>
+                  <td className="py-3 px-6">{todo.description}</td>
+                  <td className="py-3 px-6">
+                    <div className="flex flex-row space-x-2">
+                      <button
+                        className="text-blue-600 underline"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setCurrentTodo(todo);
+                          setTitle(todo.title);
+                          setDescription(todo.description);
+                        }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="text-red-500 underline"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          deleteTodo(todo.id);
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Clear All Button */}
+        <button
+          className="rounded-md border text-sm p-2 w-full bg-red-600 text-white active:bg-red-700"
+          onClick={(e) => {
+            e.preventDefault();
+            clearAllTodos();
+          }}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          Clear All Todos!
+        </button>
+      </div>
     </div>
   );
 }
