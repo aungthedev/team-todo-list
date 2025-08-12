@@ -1,26 +1,40 @@
-let todos = []; // Shared in-memory store (same file assumed to be reused)
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 export async function PATCH(req, { params }) {
   const { id } = params;
   const body = await req.json();
-  const index = todos.findIndex((t) => t.id === id);
-  if (index === -1)
-    return Response.json({ error: "Not found" }, { status: 404 });
+  console.log("PATCH /api/todos/[id] called with id:", id, "body:", body);
 
-  todos[index] = {
-    ...todos[index],
-    ...body,
-    updatedAt: Date.now(),
-  };
-  return Response.json(todos[index]);
+  const { data, error } = await supabase
+    .from('todos')
+    .update({
+      ...body,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error || !data) {
+    return Response.json({ error: error?.message || "Not found" }, { status: 404 });
+  }
+  return Response.json(data);
 }
 
 export async function DELETE(req, { params }) {
   const { id } = params;
-  const index = todos.findIndex((t) => t.id === id);
-  if (index === -1)
-    return Response.json({ error: "Not found" }, { status: 404 });
 
-  todos.splice(index, 1);
+  const { error } = await supabase
+    .from('todos')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    return Response.json({ error: error.message }, { status: 404 });
+  }
   return Response.json({ message: "Todo deleted", id });
 }

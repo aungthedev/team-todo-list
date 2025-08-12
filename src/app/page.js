@@ -44,6 +44,24 @@ export default function Home() {
     setTodoList(todoList.filter((todo) => todo.id !== id));
   };
 
+  // ...existing code...
+
+const updateTodo = async () => {
+  if (!currentTodo) return;
+  const res = await fetch(`/api/todos/${currentTodo.id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ title, description }),
+  });
+  const updatedTodo = await res.json();
+  setTodoList((prev) =>
+    prev.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo))
+  );
+  setCurrentTodo(null);
+  setTitle("");
+  setDescription("");
+};
+
   return (
     <div className="flex flex-col h-screen w-screen justify-center items-center p-4">
       <div className="flex flex-col border rounded-md w-full max-w-3xl p-4 space-y-4">
@@ -67,7 +85,7 @@ export default function Home() {
             className="rounded-md border p-2 bg-blue-600 text-white text-sm w-1/4 active:bg-blue-700"
             onClick={(e) => {
               e.preventDefault();
-              currentTodo ? alert("Update not implemented") : addTodo();
+              currentTodo ? updateTodo() : addTodo();
             }}
           >
             {currentTodo ? "Update" : "Add"} Todo!
