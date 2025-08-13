@@ -14,7 +14,7 @@ export async function POST(req) {
       {
         title: body.title || "",
         description: body.description || "",
-        done: false,
+        done : false,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       },
@@ -23,9 +23,9 @@ export async function POST(req) {
     .single();
 
   if (error) {
-    console.error("Supabase insert error:", error); 
-    return Response.json({ error: error.message }, { status: 500 });
     
+    return Response.json({ error: error.message }, { status: 500 });
+    console.error("Supabase insert error:", error); 
   }
   return Response.json(data, { status: 201 });
 }
@@ -40,8 +40,9 @@ export async function GET() {
   if (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
-  return Response.json(data);
-}
+  return Response.json(data); 
+  }
+
 
 // DELETE - clear all todos
 export async function DELETE() {

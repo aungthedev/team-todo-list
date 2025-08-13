@@ -26,7 +26,7 @@ export async function PATCH(req, { params }) {
 }
 
 export async function DELETE(req, { params }) {
-  const {id} = params;
+  const {id}= params;
 
   const { error } = await supabase
     .from('todos')
