@@ -69,7 +69,7 @@ const toggleTodoStatus = async (id, newStatus) => {
   const res = await fetch(`/api/todos/${id}`, {
   method: "PATCH",
   headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ completed: newStatus }),
+  body: JSON.stringify({ done : newStatus }),
   });
 
   if (!res.ok) {
