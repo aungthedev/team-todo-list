@@ -14,7 +14,7 @@ export async function POST(req) {
       {
         title: body.title || "",
         description: body.description || "",
-        done,
+        done : false,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       },
@@ -40,8 +40,7 @@ export async function GET() {
   if (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
-  return Response.json(data.map(t => ({
-    ...t, done: !!t.done }))); 
+  return Response.json(data); 
   }
 
 
