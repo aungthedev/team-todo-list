@@ -213,18 +213,22 @@ const toggleTodoStatus = async (id, newStatus) => {
                       <label className="inline-flex items-center">
                         <input
                           type="checkbox"
-                          checked={todo.completed}
-                          onChange={() => toggleTodoStatus(todo.id, !todo.completed)}
-                          className="mr-2 accent-blue-600"
+                          checked={todo.done}
+                          onChange={() => toggleTodoStatus(todo.id, !todo.done)}
+                          className="mr-2 w-5 h-5 rounded-full border-gray-300 checked:bg-blue-600 checked:border-transparent focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer"
                         />
                         {/* Causing error in toggle to do list so this won't work yet */}
-                        <span className={todo.completed ? "line-through text-gray-400 dark:text-gray-500" : ""}>
+                        <span className={todo.done ? "line-through text-gray-400 dark:text-gray-500" : ""}>
                           {todo.title}
                         </span>
 
                       </label>
                     </td>
-                    <td className="py-3 px-6">{todo.description}</td>
+                    <td className="py-3 px-6 text-gray-700 dark:text-gray-200">
+                      <span className={todo.done ? "line-through text-gray-400 dark:text-gray-500" : ""}>
+                        {todo.description}
+                      </span>
+                    </td>
                     <td className="py-3 px-6">
                       <div className="flex space-x-4">
                         <button
