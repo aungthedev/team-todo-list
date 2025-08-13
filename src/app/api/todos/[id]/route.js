@@ -5,7 +5,7 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export async function PATCH(req, { params }) {
-  const {id} = params;
+  const {id} = await params;
   const body = await req.json();
   console.log("PATCH /api/todos/[id] called with id:", id, "body:", body);
 
