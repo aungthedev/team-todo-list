@@ -215,7 +215,7 @@ const toggleTodoStatus = async (id, newStatus) => {
                           type="checkbox"
                           checked={todo.done}
                           onChange={() => toggleTodoStatus(todo.id, !todo.done)}
-                          className="mr-2 w-5 h-5 rounded-full border-gray-300 checked:bg-blue-600 checked:border-transparent focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer"
+                          className="mr-2 w-5 h-5 rounded-full border-2 border-blue-500 bg-white checked:bg-blue-600 checked:border-blue-600 cursor-pointer"
                         />
                         {/* Causing error in toggle to do list so this won't work yet */}
                         <span className={todo.done ? "line-through text-gray-400 dark:text-gray-500" : ""}>
