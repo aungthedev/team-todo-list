@@ -62,9 +62,34 @@ const updateTodo = async () => {
   setDescription("");
 };
 
+const toggleTodoStatus = async (id, newStatus) => {
+  const res = await fetch(`/api/todos/${id}`, {
+  method: "PATCH",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ completed: newStatus }),
+  });
+
+  if (!res.ok) {
+    console.error("Failed to update todo:", res.status);
+    return;
+  }
+  const updatedTodo = await res.json();
+  setTodoList((prev) =>
+    prev.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo))
+  );
+};
+
   return (
     <div className="flex flex-col h-screen w-screen justify-center items-center p-4">
       <div className="flex flex-col border rounded-md w-full max-w-3xl p-4 space-y-4">
+        {/* 📝 Title */}
+        <h1 className="text-2xl font-bold text-center text-gray-800"
+            style={{ fontFamily: "Arial, sans-serif" }}>
+          📝 Todo List ({todoList.length})
+        </h1>
+        <p className="text-sm text-center text-gray-600 italic">
+          Track your goals. Make progress daily.
+        </p>
         {/* Form */}
         <div className="flex flex-row space-x-2 w-full justify-between">
           <input
@@ -105,7 +130,15 @@ const updateTodo = async () => {
             <tbody>
               {todoList.map((todo, index) => (
                 <tr key={index} className="bg-white border-b">
-                  <td className="py-3 px-6">{todo.title}</td>
+                  <td className="py-3 px-6">
+                    <input
+                      type="checkbox"
+                      checked={todo.completed}
+                      onChange={() => toggleTodoStatus(todo.id, !todo.completed)}
+                      className="mr-2"
+                    />
+                    {todo.title}
+                  </td>
                   <td className="py-3 px-6">{todo.description}</td>
                   <td className="py-3 px-6">
                     <div className="flex flex-row space-x-2">
