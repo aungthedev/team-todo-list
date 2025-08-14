@@ -74,8 +74,6 @@ export default function Home() {
     }
   };
 
-  // ...existing code...
-
 const updateTodo = async () => {
     if (!currentTodo) return;
     try {
