@@ -1,10 +1,14 @@
 "use client";
 
 import { useState, useEffect, ustRef, useRef } from "react";
-import { PencilIcon, TrashIcon, MoonIcon, SunIcon } from "@heroicons/react/24/solid";
+import {
+  PencilIcon,
+  TrashIcon,
+  MoonIcon,
+  SunIcon,
+} from "@heroicons/react/24/solid";
 import { ClipboardDocumentListIcon } from "@heroicons/react/24/outline";
 import { Toaster, toast } from "react-hot-toast";
-
 
 export default function Home() {
   const [todoList, setTodoList] = useState([]);
@@ -21,7 +25,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    titleRef.current?.focus(); 
+    titleRef.current?.focus();
   }, [darkMode]);
 
   const fetchTodos = async () => {
@@ -74,7 +78,7 @@ export default function Home() {
     }
   };
 
-const updateTodo = async () => {
+  const updateTodo = async () => {
     if (!currentTodo) return;
     try {
       const res = await fetch(`/api/todos/${currentTodo.id}`, {
@@ -95,7 +99,7 @@ const updateTodo = async () => {
     }
   };
 
-const toggleTodoStatus = async (id, newStatus) => {
+  const toggleTodoStatus = async (id, newStatus) => {
     try {
       const res = await fetch(`/api/todos/${id}`, {
         method: "PATCH",
@@ -127,7 +131,11 @@ const toggleTodoStatus = async (id, newStatus) => {
             onClick={() => setDarkMode(!darkMode)} // ✅ Toggle dark mode
             className="flex items-center space-x-2 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-md"
           >
-            {darkMode ? <SunIcon className="h-5 w-5" /> : <MoonIcon className="h-5 w-5" />}
+            {darkMode ? (
+              <SunIcon className="h-5 w-5" />
+            ) : (
+              <MoonIcon className="h-5 w-5" />
+            )}
             <span>{darkMode ? "Light Mode" : "Dark Mode"}</span>
           </button>
         </div>
@@ -135,8 +143,8 @@ const toggleTodoStatus = async (id, newStatus) => {
           {/* 📝 Title */}
           <h1
             className="text-3xl font-bold text-center text-gray-900 dark:text-gray-100 tracking-tight flex items-center justify-center space-x-2"
-            style={{ fontFamily: "Arial, sans-serif" }}>
-            
+            style={{ fontFamily: "Arial, sans-serif" }}
+          >
             <ClipboardDocumentListIcon className="h-7 w-7 text-blue-600 dark:text-blue-400" />
             <span>Todo List ({todoList.length})</span>
           </h1>
@@ -150,21 +158,23 @@ const toggleTodoStatus = async (id, newStatus) => {
               e.preventDefault();
               currentTodo ? updateTodo() : addTodo();
             }}
-            className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 w-full">
+            className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 w-full"
+          >
             <input
               ref={titleRef}
               type="text"
               placeholder="Title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              onKeyDown={(e)=> {
-                if (e.key === "ArrowRight"){
+              onKeyDown={(e) => {
+                if (e.key === "ArrowRight") {
                   descriptionRef.current?.focus();
                 }
               }}
               className="border rounded-md p-2 text-sm w-full sm:w-1/3 
-                         focus:outline-none focus:ring-2 focus:ring-blue-500 
-                       dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+             focus:outline-none focus:ring-2 focus:ring-blue-500 
+             dark:bg-gray-700 dark:text-white dark:placeholder-gray-400
+             whitespace-normal break-words min-h-[40px]"
             />
             <input
               ref={descriptionRef}
@@ -172,14 +182,15 @@ const toggleTodoStatus = async (id, newStatus) => {
               placeholder="Description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              onKeyDown={(e)=> {
-                if (e.key === "ArrowLeft"){
+              onKeyDown={(e) => {
+                if (e.key === "ArrowLeft") {
                   titleRef.current?.focus();
                 }
               }}
               className="border rounded-md p-2 text-sm w-full sm:w-1/3 
-                         focus:outline-none focus:ring-2 focus:ring-blue-500 
-                       dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+           focus:outline-none focus:ring-2 focus:ring-blue-500 
+           dark:bg-gray-700 dark:text-white dark:placeholder-gray-400
+           whitespace-normal break-words"
             />
             <button
               type="submit"
@@ -192,7 +203,6 @@ const toggleTodoStatus = async (id, newStatus) => {
               {currentTodo ? "Update" : "Add"} Todo!
             </button>
           </form>
-          
 
           {/* Table */}
           <div className="overflow-x-auto border rounded-md">
@@ -206,8 +216,11 @@ const toggleTodoStatus = async (id, newStatus) => {
               </thead>
               <tbody>
                 {todoList.map((todo, index) => (
-                  <tr key={index} className="odd:bg-white even:bg-gray-50 hover:bg-gray-100 border-b transition dark:odd:bg-gray-800 dark:even:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition">
-                    <td className="py-3 px-6 text-gray-700 dark:text-gray-200">
+                  <tr
+                    key={index}
+                    className="odd:bg-white even:bg-gray-50 hover:bg-gray-100 border-b transition dark:odd:bg-gray-800 dark:even:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition"
+                  >
+                    <td className="py-3 px-6 text-gray-700 dark:text-gray-200 max-w-[200px] break-all whitespace-normal">
                       <label className="inline-flex items-center">
                         <input
                           type="checkbox"
@@ -216,14 +229,25 @@ const toggleTodoStatus = async (id, newStatus) => {
                           className="mr-2 w-5 h-5 rounded-full border-2 border-blue-500 bg-white checked:bg-blue-600 checked:border-blue-600 cursor-pointer"
                         />
                         {/* Causing error in toggle to do list so this won't work yet */}
-                        <span className={todo.done ? "line-through text-gray-400 dark:text-gray-500" : ""}>
+                        <span
+                          className={
+                            todo.done
+                              ? "line-through text-gray-400 dark:text-gray-500"
+                              : ""
+                          }
+                        >
                           {todo.title}
                         </span>
-
                       </label>
                     </td>
-                    <td className="py-3 px-6 text-gray-700 dark:text-gray-200">
-                      <span className={todo.done ? "line-through text-gray-400 dark:text-gray-500" : ""}>
+                    <td className="py-3 px-6 text-gray-700 dark:text-gray-200 max-w-[300px] break-all whitespace-normal">
+                      <span
+                        className={
+                          todo.done
+                            ? "line-through text-gray-400 dark:text-gray-500"
+                            : ""
+                        }
+                      >
                         {todo.description}
                       </span>
                     </td>
@@ -260,8 +284,10 @@ const toggleTodoStatus = async (id, newStatus) => {
             {todoList.length === 0 && (
               <div className="flex flex-col items-center justify-center py-12 text-gray-500">
                 <ClipboardDocumentListIcon className="h-12 w-12 mb-4 text-gray-400" />
-                <p className="text-sm italic">No tasks yet. Add something to get started!</p>
-                
+                <p className="text-sm italic">
+                  No tasks yet. Add something to get started!
+                </p>
+
                 <button
                   className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
                   onClick={() => {
@@ -272,9 +298,7 @@ const toggleTodoStatus = async (id, newStatus) => {
                   Add Your First Task
                 </button>
               </div>
-          )}
-
-
+            )}
           </div>
 
           {/* Clear All Button */}
