@@ -56,6 +56,6 @@ Asett – UI design,and testing (verified backend and frontend integration).
 David Lin – Frontend development (contributed to UI features and frontend functionality and testing).
 
 Collaboration:
-All three contributed to testing, debugging, and managing branches/updates via GitHub.
+All four of us contributed to testing, debugging, and managing branches/updates via GitHub.
 
 ![App Screenshot](./public/Screenshot%202025-08-15%20094050.png)
