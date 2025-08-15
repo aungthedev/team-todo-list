@@ -51,7 +51,7 @@ Jayden – Frontend development (raw frontend version using local state, before 
 
 Orion Lynn – Backend development (connected frontend to Supabase backend).
 
-Assett – UI design,and testing (verified backend and frontend integration).
+Asett – UI design,and testing (verified backend and frontend integration).
 
 David Lin – Frontend development (contributed to UI features and frontend functionality and testing).
 
