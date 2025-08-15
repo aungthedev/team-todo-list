@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // POST - create new todo
@@ -25,7 +25,7 @@ export async function POST(req) {
   if (error) {
     
     return Response.json({ error: error.message }, { status: 500 });
-    console.error("Supabase insert error:", error); 
+    
   }
   return Response.json(data, { status: 201 });
 }
@@ -49,7 +49,7 @@ export async function DELETE() {
   const { error } = await supabase
     .from('todos')
     .delete()
-    .neq('id', '');
+    .not('id', 'is', null);
 
   if (error) {
     return Response.json({ error: error.message }, { status: 500 });

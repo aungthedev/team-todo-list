@@ -53,15 +53,22 @@ export default function Home() {
     }
   };
 
-  const clearAllTodos = async () => {
-    try {
-      await fetch("/api/todos", { method: "DELETE" });
-      setTodoList([]);
-      toast.success("All todos cleared!");
-    } catch {
-      toast.error("Failed to clear todos.");
+ 
+const clearAllTodos = async () => {
+  try {
+    const res = await fetch("/api/todos", { method: "DELETE" });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || "Failed to clear todos");
     }
-  };
+
+    setTodoList([]);
+    toast.success("All todos cleared!");
+  } catch (error) {
+    toast.error("Failed to clear todos.");
+  }
+};
+
 
   // NEW: Delete todo function
   const deleteTodo = async (id) => {
@@ -73,6 +80,8 @@ export default function Home() {
       toast.error("Failed to delete todo.");
     }
   };
+
+  // ...existing code...
 
 const updateTodo = async () => {
     if (!currentTodo) return;
